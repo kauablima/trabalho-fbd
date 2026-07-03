@@ -6,4 +6,4 @@ app = FastAPI(
     version="0.0.1"
 )
 
-app.include_router(aposta_router, prefix="/apostas")
+app.include_router(aposta_router, prefix="/api")

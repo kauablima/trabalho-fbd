@@ -34,7 +34,7 @@ async def listar_apostas():
     cur = conn.cursor()
 
     cur.execute(
-        "SELECT valor, data, cpf_usuario, id_bolao FROM aposta"
+        "SELECT  id_aposta, valor, data, cpf_usuario, id_bolao FROM aposta"
     )
 
     rows = cur.fetchall()
@@ -43,15 +43,16 @@ async def listar_apostas():
 
     return [
         Aposta(
-            valor=a[0], 
-            data=a[1] , 
-            cpf_usuario=a[2], 
-            id_bolao=a[3]
+            id_aposta=a[0],
+            valor=a[1], 
+            data=a[2] , 
+            cpf_usuario=a[3], 
+            id_bolao=a[4]
         ) for a in rows 
     ]
 
 @router.get("/apostas/{id_aposta}")   
-async def listar_ap_by_id(id_aposta: int):
+async def listar_aposta_by_id(id_aposta: int):
     conn = get_connection()
     cur = conn.cursor()
 
@@ -64,14 +65,13 @@ async def listar_ap_by_id(id_aposta: int):
     conn.close()
 
     if row:
-        return [
-            Aposta(
-                valor=a[0], 
-                data=a[1] , 
-                cpf_usuario=a[2], 
-                id_bolao=a[3]
-            ) for a in rows 
-        ]
+        return Aposta(
+            id_aposta=row[0],
+            valor=row[1],
+            data=row[2], 
+            cpf_usuario=row[3], 
+            id_bolao=row[4]
+        )
     raise HTTPException(404, f"Não possui nenhuma aposta registrada")
 
 @router.patch("/apostas/{id_aposta}")
@@ -100,10 +100,11 @@ async def atualizar_aposta(id_aposta: int, dto: ApostaUpdate):
         conn.close()
         raise HTTPException(404, f"Nenhum campo informado na atualização")
 
+    values.append(id_aposta)
     
     try:
         cur.execute(
-            f"UPDATE aposta SET{', '.join(fields)} WHERE id_aposta=%s", values
+            f"UPDATE aposta SET {', '.join(fields)} WHERE id_aposta=%s", values
         )
         conn.commit()
 
