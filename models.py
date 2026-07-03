@@ -3,19 +3,21 @@ from typing import Optional
 from datetime import date
 
 class Aposta(BaseModel):
-    valor: int 
-    data: Optional[date] = None
-    cpf_usuario: int
-    id_bolao: int 
-
-class ApotaUpadate(BaseModel): 
+    id_aposta: Optional[int] = None
     valor: int
     data: Optional[date] = None
+    cpf_usuario: str
+    id_bolao: int
 
-class Campeonato(BaseModel): 
-    nome_campeonato: str
-    ano: int
+class ApostaUpdate(BaseModel): 
+    valor: Optional[int] = None
+    data: Optional[date] = None
 
-class CampeonatoUpadate(BaseModel): 
-    nome_campeonato: str
-    ano: int
+
+# class Campeonato(BaseModel): 
+#     nome_campeonato: str
+#     ano: int
+
+# class CampeonatoUpadate(BaseModel): 
+#     nome_campeonato: str
+#     ano: int
